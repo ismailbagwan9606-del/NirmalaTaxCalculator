@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Global Income Tax Calculator - Calculate income tax for 25+ countries including USA, UK, Canada, Australia, Germany, France, Japan, India, and more. Accurate tax laws, deductions, and rates.">
+  <meta name="keywords" content="income tax calculator, global tax calculator, usa tax calculator, uk tax calculator, canada tax calculator, australia tax calculator">
+  <meta name="robots" content="index, follow">
+  <title>Global Income Tax Calculator - 25+ Countries</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Space Grotesk', sans-serif; }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    
+    .gradient-border {
+      position: relative;
+    }
+    
+    .gradient-border::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(168, 85, 247, 0.5));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
+    
+    .result-glow {
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.2);
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .animate-slide {
+      animation: slideIn 0.3s ease-out forwards;
+    }
+    
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.5);
+      border-radius: 2px;
+    }
+  </style>
+  <style>body { box-sizing: border-box; }</style>
+  <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+ </head>
+ <body class="h-full bg-slate-950 text-white overflow-hidden">
+  <div id="app" class="h-full w-full overflow-auto scrollbar-thin">
+   <div class="min-h-full w-full bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-4 md:p-8"><!-- Background Effects -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden">
+     <div class="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl"></div>
+     <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+    </div>
+    <div class="relative z-10 max-w-5xl mx-auto"><!-- Header -->
+     <header class="text-center mb-8">
+      <h1 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-3">🌍 Global Income Tax Calculator</h1>
+      <p class="text-slate-300 text-base mb-2">Accurate Tax Calculation for 25+ Countries</p>
+      <p class="text-slate-400 text-sm">Calculate income tax with real tax laws, deductions, and rates for USA, UK, Canada, Australia, India, Germany, France, Japan, and more.</p>
+     </header><!-- Country Selector -->
+     <div class="glass-card rounded-2xl p-6 md:p-8 mb-6"><label for="country-select" class="text-slate-400 text-sm mb-3 block font-medium">Select Your Country</label> <select id="country-select" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-3 px-4 text-white focus:outline-none focus:border-indigo-500 transition-colors text-base" onchange="changeCountry()" aria-label="Select country for tax calculation"> <optgroup label="🇺🇸 North America"> <option value="US">United States - Federal Tax 2024</option> <option value="CA">Canada - Federal &amp; Provincial Tax</option> <option value="MX">Mexico - Income Tax</option> </optgroup> <optgroup label="🇬🇧 Europe"> <option value="GB">United Kingdom - Income Tax</option> <option value="DE">Germany - Income Tax</option> <option value="FR">France - Income Tax</option> <option value="IT">Italy - Income Tax</option> <option value="ES">Spain - Income Tax</option> <option value="NL">Netherlands - Income Tax</option> <option value="SE">Sweden - Income Tax</option> <option value="CH">Switzerland - Cantonal Tax</option> </optgroup> <optgroup label="🌏 Asia-Pacific"> <option value="IN" selected>India - FY 2025-26 Tax</option> <option value="JP">Japan - Income Tax</option> <option value="AU">Australia - Income Tax</option> <option value="HK">Hong Kong - Salaries Tax</option> <option value="NZ">New Zealand - Income Tax</option> <option value="MY">Malaysia - Personal Income Tax</option> <option value="TH">Thailand - Personal Income Tax</option> <option value="KR">South Korea - Income Tax</option> </optgroup> <optgroup label="🌍 Middle East &amp; Others"> <option value="AE">UAE - Corporate Tax (0% Personal)</option> <option value="SA">Saudi Arabia - Zakat &amp; Tax</option> <option value="BR">Brazil - Income Tax</option> <option value="ZA">South Africa - Income Tax</option> </optgroup> </select>
+     </div><!-- Tax Calculator Card -->
+     <div class="glass-card rounded-2xl p-6 md:p-8 mb-6 animate-slide">
+      <div id="country-info" class="mb-6 pb-6 border-b border-slate-700/30">
+       <div class="flex items-start justify-between gap-4">
+        <div>
+         <h2 id="country-name" class="text-2xl font-bold text-white mb-1">India - FY 2025-26</h2>
+         <p id="country-tax-year" class="text-slate-400 text-sm mb-2">Tax Year: 2025-26</p>
+         <p id="country-note" class="text-slate-500 text-xs"></p>
+        </div>
+        <div class="text-right">
+         <p id="country-currency" class="text-slate-300 font-semibold text-lg">₹ INR</p>
+         <p id="country-flag" class="text-4xl mt-1">🇮🇳</p>
+        </div>
+       </div>
+      </div><!-- Income Input -->
+      <div class="mb-6"><label for="annual-income" class="text-slate-400 text-sm mb-2 block font-medium">Annual Gross Income</label>
+       <div class="relative"><span id="currency-symbol" class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-medium">₹</span> <input type="number" id="annual-income" placeholder="Enter your annual income" class="w-full bg-slate-800/50 border border-slate-700 rounded-xl py-3 pl-10 pr-4 text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors" oninput="calculateTax()" aria-label="Annual Income">
+       </div>
+      </div><!-- Country-Specific Deductions -->
+      <div id="deductions-container" class="mb-6"></div><!-- Tax Result -->
+      <div id="tax-result" class="hidden">
+       <div class="result-glow gradient-border rounded-xl p-6 bg-slate-800/30">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center mb-6">
+         <div>
+          <p class="text-slate-400 text-xs mb-1 font-medium">Taxable Income</p>
+          <p id="taxable-income-display" class="text-lg font-semibold text-white">0</p>
+         </div>
+         <div>
+          <p class="text-slate-400 text-xs mb-1 font-medium">Income Tax</p>
+          <p id="income-tax-display" class="text-lg font-semibold text-indigo-400">0</p>
+         </div>
+         <div>
+          <p class="text-slate-400 text-xs mb-1 font-medium">Other Taxes</p>
+          <p id="other-tax-display" class="text-lg font-semibold text-purple-400">0</p>
+         </div>
+         <div>
+          <p class="text-slate-400 text-xs mb-1 font-medium">Total Tax Due</p>
+          <p id="total-tax-display" class="text-xl font-bold text-transparent bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text">0</p>
+         </div>
+        </div><!-- Effective Tax Rate -->
+        <div class="grid grid-cols-2 gap-4 pt-6 border-t border-slate-700/50">
+         <div class="text-center">
+          <p class="text-slate-400 text-xs mb-1 font-medium">Effective Tax Rate</p>
+          <p id="effective-rate" class="text-lg font-semibold text-emerald-400">0%</p>
+         </div>
+         <div class="text-center">
+          <p class="text-slate-400 text-xs mb-1 font-medium">Take-Home Pay</p>
+          <p id="take-home" class="text-lg font-semibold text-cyan-400">0</p>
+         </div>
+        </div><!-- Tax Breakdown -->
+        <div id="tax-breakdown" class="pt-6 border-t border-slate-700/50 mt-6">
+         <p class="text-slate-400 text-xs mb-3 font-medium">📊 Tax Breakdown</p>
+         <div id="slab-details" class="space-y-2 text-sm"></div>
+        </div>
+       </div>
+      </div>
+     </div><!-- Tax Information by Country -->
+     <div class="glass-card rounded-2xl p-6 md:p-8" id="country-details"><!-- Dynamically populated -->
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+    const countryTaxData = {
+      US: {
+        name: 'United States',
+        flag: '🇺🇸',
+        currency: 'USD $',
+        taxYear: '2024 (Calendar Year)',
+        note: 'Federal income tax only. Does not include state taxes.',
+        standardDeduction: 14600,
+        deductions: [],
+        taxBrackets: [
+          { min: 0, max: 11600, rate: 0.10 },
+          { min: 11600, max: 47150, rate: 0.12 },
+          { min: 47150, max: 100525, rate: 0.22 },
+          { min: 100525, max: 191950, rate: 0.24 },
+          { min: 191950, max: 243725, rate: 0.32 },
+          { min: 243725, max: 609350, rate: 0.35 },
+          { min: 609350, max: Infinity, rate: 0.37 }
+        ],
+        credits: 0,
+        fica: 0.0765,
+        stateNote: 'State taxes vary by location'
+      },
+      CA: {
+        name: 'Canada',
+        flag: '🇨🇦',
+        currency: 'CAD $',
+        taxYear: '2024 (Tax Year)',
+        note: 'Federal tax only. Provincial tax varies by province.',
+        basicPersonalAmount: 15705,
+        deductions: [
+          { name: 'RRSP Contributions', max: 31560, editable: true },
+          { name: 'Spousal Amount', max: 15705, editable: false }
+        ],
+        taxBrackets: [
+          { min: 0, max: 55867, rate: 0.15 },
+          { min: 55867, max: 111733, rate: 0.205 },
+          { min: 111733, max: 173205, rate: 0.26 },
+          { min: 173205, max: 246752, rate: 0.29 },
+          { min: 246752, max: Infinity, rate: 0.33 }
+        ],
+        cpp: 0.0595,
+        ei: 0.0158,
+        provincialNote: 'Provincial tax ranges from 5.05% to 20.5% depending on province'
+      },
+      GB: {
+        name: 'United Kingdom',
+        flag: '🇬🇧',
+        currency: 'GBP £',
+        taxYear: '2024-25 (Tax Year)',
+        note: 'Income tax only. Does not include National Insurance contributions.',
+        personalAllowance: 12570,
+        deductions: [],
+        taxBrackets: [
+          { min: 0, max: 50270, rate: 0.20 },
+          { min: 50270, max: 125140, rate: 0.40 },
+          { min: 125140, max: Infinity, rate: 0.45 }
+        ],
+        ni: 0.08,
+        niNote: 'National Insurance contributions apply separately'
+      },
+      DE: {
+        name: 'Germany',
+        flag: '🇩🇪',
+        currency: 'EUR €',
+        taxYear: '2024',
+        note: 'Includes federal tax, solidarity surcharge (5.5%), and church tax.',
+        basicAllowance: 11604,
+        deductions: [
+          { name: 'Work-Related Expenses', max: 1200, editable: false },
+          { name: 'Special Expenses', max: 800, editable: false }
+        ],
+        taxBrackets: [
+          { min: 0, max: 11604, rate: 0 },
+          { min: 11604, max: 45952, rate: 0.42 },
+          { min: 45952, max: 120351, rate: 0.42 },
+          { min: 120351, max: 276000, rate: 0.45 },
+          { min: 276000, max: Infinity, rate: 0.45 }
+        ],
+        solidarity: 0.055,
+        churchTax: 0.08,
+        socialInsurance: 0.21
+      },
+      FR: {
+        name: 'France',
+        flag: '🇫🇷',
+        currency: 'EUR €',
+        taxYear: '2024',
+        note: 'Progressive tax with social charges.',
+        personalAllowance: 0,
+        deductions: [
+          { name: 'Personal Allowance (10%)', max: 4412, editable: false }
+        ],
+        taxBrackets: [
+          { min: 0, max: 10777, rate: 0 },
+          { min: 10777, max: 27478, rate: 0.11 },
+          { min: 27478, max: 78534, rate: 0.30 },
+          { min: 78534, max: 168994, rate: 0.41 },
+          { min: 168994, max: Infinity, rate: 0.45 }
+        ],
+        socialCharges: 0.077,
+        socialNote: 'Social charges ~7.7% (CSG, CRDS, etc.)'
+      },
+      IN: {
+        name: 'India',
+        flag: '🇮🇳',
+        currency: 'INR ₹',
+        taxYear: 'FY 2025-26 (Apr 2025 - Mar 2026)',
+        note: 'New Regime (default) - No deductions but lower rates. Switch to Old Regime for Section 80 deductions.',
+        deductions: [
+          { name: 'Section 80C (PPF, ELSS, LIC, etc.)', max: 150000, editable: true, regime: 'old' },
+          { name: 'Section 80D (Health Insurance)', max: 75000, editable: true, regime: 'old' },
+          { name: 'HRA Exemption', max: 1000000, editable: true, regime: 'old' },
+          { name: 'Standard Deduction', max: 75000, editable: false, regime: 'new' }
+        ],
+        regime: 'new',
+        taxBrackets: {
+          new: [
+            { min: 0, max: 400000, rate: 0 },
+            { min: 400000, max: 800000, rate: 0.05 },
+            { min: 800000, max: 1200000, rate: 0.10 },
+            { min: 1200000, max: 1600000, rate: 0.15 },
+            { min: 1600000, max: 2000000, rate: 0.20 },
+            { min: 2000000, max: 2400000, rate: 0.25 },
+            { min: 2400000, max: Infinity, rate: 0.30 }
+          ],
+          old: [
+            { min: 0, max: 300000, rate: 0 },
+            { min: 300000, max: 700000, rate: 0.05 },
+            { min: 700000, max: 1000000, rate: 0.20 },
+            { min: 1000000, max: Infinity, rate: 0.30 }
+          ]
+        },
+        cess: 0.04,
+        cessNote: '4% cess on total income tax'
+      },
+      AU: {
+        name: 'Australia',
+        flag: '🇦🇺',
+        currency: 'AUD $',
+        taxYear: '2024-25 (FY)',
+        note: 'Medicare Levy 2% applies. Does not include state taxes.',
+        taxFreeThreshold: 18200,
+        deductions: [
+          { name: 'Work-Related Expenses', max: 5000, editable: true }
+        ],
+        taxBrackets: [
+          { min: 0, max: 18200, rate: 0 },
+          { min: 18200, max: 45000, rate: 0.19 },
+          { min: 45000, max: 120000, rate: 0.325 },
+          { min: 120000, max: 180000, rate: 0.37 },
+          { min: 180000, max: Infinity, rate: 0.45 }
+        ],
+        medicareLevy: 0.02
+      },
+      HK: {
+        name: 'Hong Kong',
+        flag: '🇭🇰',
+        currency: 'HKD $',
+        taxYear: '2024-25 (Fiscal Year)',
+        note: 'One of the lowest tax rates globally.',
+        personalAllowance: 132000,
+        deductions: [
+          { name: 'Dependent Allowance', max: 110000, editable: true },
+          { name: 'Self-Education Expenses', max: 100000, editable: true }
+        ],
+        taxBrackets: [
+          { min: 0, max: 150000, rate: 0.02 },
+          { min: 150000, max: 310000, rate: 0.06 },
+          { min: 310000, max: 470000, rate: 0.10 },
+          { min: 470000, max: 630000, rate: 0.14 },
+          { min: 630000, max: Infinity, rate: 0.17 }
+        ]
+      },
+      NZ: {
+        name: 'New Zealand',
+        flag: '🇳🇿',
+        currency: 'NZD $',
+        taxYear: '2024-25 (Tax Year)',
+        note: 'KiwiSaver contributions reduce taxable income.',
+        deductions: [
+          { name: 'KiwiSaver Contributions', max: 4160, editable: true }
+        ],
+        taxBrackets: [
+          { min: 0, max: 15600, rate: 0.105 },
+          { min: 15600, max: 43200, rate: 0.175 },
+          { min: 43200, max: 70200, rate: 0.30 },
+          { min: 70200, max: Infinity, rate: 0.33 }
+        ]
+      },
+      AE: {
+        name: 'UAE',
+        flag: '🇦🇪',
+        currency: 'AED د.إ',
+        taxYear: '2024',
+        note: '0% personal income tax! Corporate tax 0% for residents.',
+        taxBrackets: [
+          { min: 0, max: Infinity, rate: 0 }
+        ],
+        corporateTax: '0% for UAE residents',
+        advantage: '✨ Zero personal income tax for all residents'
+      },
+      JP: {
+        name: 'Japan',
+        flag: '🇯🇵',
+        currency: 'JPY ¥',
+        taxYear: '2024 (Calendar Year)',
+        note: 'Progressive national tax plus prefectural and municipal taxes.',
+        basicDeduction: 480000,
+        deductions: [
+          { name: 'Dependent Deduction', max: 6230000, editable: true },
+          { name: 'Spousal Deduction', max: 1100000, editable: true }
+        ],
+        taxBrackets: [
+          { min: 0, max: 1949000, rate: 0.05 },
+          { min: 1949000, max: 3298000, rate: 0.10 },
+          { min: 3298000, max: 6948000, rate: 0.20 },
+          { min: 6948000, max: 9000000, rate: 0.23 },
+          { min: 9000000, max: 18000000, rate: 0.33 },
+          { min: 18000000, max: Infinity, rate: 0.40 }
+        ],
+        localTax: 0.10,
+        localNote: 'Local taxes (~10%) apply in addition to national tax'
+      },
+      BR: {
+        name: 'Brazil',
+        flag: '🇧🇷',
+        currency: 'BRL R$',
+        taxYear: '2024 (Calendar Year)',
+        note: 'Progressive tax system with IRPF (Personal Income Tax).',
+        deductions: [
+          { name: 'Standard Deduction', max: 15000, editable: false }
+        ],
+        taxBrackets: [
+          { min: 0, max: 23903, rate: 0 },
+          { min: 23903, max: 35889, rate: 0.075 },
+          { min: 35889, max: 71776, rate: 0.15 },
+          { min: 71776, max: 968457, rate: 0.225 },
+          { min: 968457, max: Infinity, rate: 0.275 }
+        ]
+      },
+      ZA: {
+        name: 'South Africa',
+        flag: '🇿🇦',
+        currency: 'ZAR R',
+        taxYear: '2024-25 (Tax Year)',
+        note: 'Primary Rebate and other relief amounts.',
+        primaryRebate: 17235,
+        deductions: [
+          { name: 'Deductible Expenses', max: 50000, editable: true }
+        ],
+        taxBrackets: [
+          { min: 0, max: 237100, rate: 0.18 },
+          { min: 237100, max: 370500, rate: 0.26 },
+          { min: 370500, max: 512800, rate: 0.31 },
+          { min: 512800, max: 673000, rate: 0.36 },
+          { min: 673000, max: 873000, rate: 0.39 },
+          { min: 873000, max: 1193600, rate: 0.41 },
+          { min: 1193600, max: Infinity, rate: 0.45 }
+        ]
+      },
+      KR: {
+        name: 'South Korea',
+        flag: '🇰🇷',
+        currency: 'KRW ₩',
+        taxYear: '2024 (Calendar Year)',
+        note: 'National Health Insurance and Employment Insurance deducted.',
+        basicDeduction: 2700000,
+        deductions: [
+          { name: 'Dependent Deduction', max: 13500000, editable: true }
+        ],
+        taxBrackets: [
+          { min: 0, max: 14000000, rate: 0.06 },
+          { min: 14000000, max: 50000000, rate: 0.15 },
+          { min: 50000000, max: 88000000, rate: 0.24 },
+          { min: 88000000, max: 150000000, rate: 0.35 },
+          { min: 150000000, max: 300000000, rate: 0.38 },
+          { min: 300000000, max: 500000000, rate: 0.40 },
+          { min: 500000000, max: Infinity, rate: 0.42 }
+        ],
+        nhi: 0.0789,
+        ei: 0.009
+      },
+      MY: {
+        name: 'Malaysia',
+        flag: '🇲🇾',
+        currency: 'MYR RM',
+        taxYear: '2024 (Calendar Year)',
+        note: 'Includes federal and state taxes.',
+        personalRelief: 9000,
+        deductions: [
+          { name: 'EPF Contributions', max: 60000, editable: true },
+          { name: 'Medical Insurance', max: 6000, editable: true },
+          { name: 'Dependent Reli
